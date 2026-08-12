@@ -1,0 +1,21 @@
+
+#데이터
+data/raw/
+!data/raw/.gitkeep
+data/processed/
+
+outputs/
+
+counsell_github/prompt/counseling/cluster_details/*
+
+# macOS
+.DS_Store
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# .venv
+.venv/
+# cache
+.cache/

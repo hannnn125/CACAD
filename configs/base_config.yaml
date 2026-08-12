@@ -1,0 +1,43 @@
+paths: 
+  base_data: data
+  labeled_data: data/processed/labeled_dataset
+  offensive_data: data/processed/offensive_dataset
+  finetuning_data: data/processed/finetuning_dataset
+  prompt_dir: prompt
+  cache_dir: /nas/user10/.cache/yg/
+  output_dir: outputs/
+
+abuse_types:
+  - 방임
+  - 정서학대
+  - 신체학대
+  - 성학대
+
+exclude_files : {"0013.json", "0004.json", "0005.json", "0122.json"}
+
+clustering:
+  model_name: jhgan/ko-sroberta-multitask
+  similarity_threshold: 0.55
+  merge_threshold: 0.85
+  hdbscan_parameters:
+    방임:
+      min_cluster_size: 20
+      min_samples: 10
+    정서학대:
+      min_cluster_size: 22
+      min_samples: 10
+    신체학대:
+      min_cluster_size: 22
+      min_samples: 10
+    성학대:
+      min_cluster_size: 30
+      min_samples: 10
+
+counseling:
+  server_url: "http://203.229.207.38:8010/v1"
+  api_key: "EMPTY"
+  model_name: "LGAI-EXAONE/EXAONE-4.0-32B-AWQ"
+  nqcp_url: "http://localhost:8001"
+  cluster_unique_question_path: "data/processed/labeled_dataset/TopQ_by_type.json"
+  max_turns: 30
+  conversation_save_dir: "./conversations"
