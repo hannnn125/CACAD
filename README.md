@@ -5,13 +5,13 @@
 This repository contains the official implement of "[Conversational AI for Child Abuse Detection Through Multistage Counseling: Model Development and Validation Study](https://www.jmir.org/2026/1/e86536)"
 ![overview](./assets/main.png)
 
-> Hyun-Young Moon<sup>1*</sup>, Youn-Gyu Jin1*, Yoon-Ju Kim1, Gwang-Cheol Lee1, Hyeon-Taek Oh2, Hyun A Kim2, Dinara Aliyeva3, Hyunjoo Na4, Kang-Min Kim5†
-> 1Department of Artificial Intelligence, The Catholic University of Korea, Bucheon, Republic of South Korea
-> 2Department of Psychology, The Catholic University of Korea, Bucheon, Republic of South Korea
-> 3Department of Computer Science, College of Arts & Sciences, University of North Carolina at Chapel Hill, Chapel Hill, NC, United States
-> 4College of Nursing, The Catholic University of Korea, Seoul, Republic of South Korea
-> 5Department of Software Convergence, Kyung Hee University, Yongin, Gyeonggi, Republic of South Korea
-> *: Equal Contribution, †: Corresponding Author
+> Hyun-Young Moon<sup>1*</sup>, Youn-Gyu Jin<sup>1*</sup>, Yoon-Ju Kim<sup>1</sup>, Gwang-Cheol Lee<sup>1</sup>, Hyeon-Taek Oh<sup>2</sup>, Hyun A Kim<sup>2</sup>, Dinara Aliyeva<sup>3</sup>, Hyunjoo Na<sup>4</sup>, Kang-Min Kim<sup>5†</sup><br>
+> <sup>1</sup>Department of Artificial Intelligence, The Catholic University of Korea, Bucheon, Republic of South Korea<br>
+> <sup>2</sup>Department of Psychology, The Catholic University of Korea, Bucheon, Republic of South Korea<br>
+> <sup>3</sup>Department of Computer Science, College of Arts & Sciences, University of North Carolina at Chapel Hill, Chapel Hill, NC, United States<br>
+> <sup>4</sup>College of Nursing, The Catholic University of Korea, Seoul, Republic of South Korea<br>
+> <sup>5</sup>Department of Software Convergence, Kyung Hee University, Yongin, Gyeonggi, Republic of South Korea<br>
+> \* Equal Contribution, † Corresponding Author
 
 ---
 ## This repository includes:
@@ -107,7 +107,8 @@ We conducted CACAD using the following datsets:
 
 You can also use your own dataset, as long as it follows the same data structure below:
 
-Data structure details
+<details>
+<summary>Data structure details</summary>
 
 ```bash
 {
@@ -144,6 +145,7 @@ Data structure details
     "ground_truth": [0,1,0,1]
 }
 ```
+</details>
 
 ### Preprocessing
 ##### Step 1:
