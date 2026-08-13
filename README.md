@@ -1,0 +1,2 @@
+This repository contains the official implement of "[Conversational AI for Child Abuse Detection Through Multistage Counseling: Model Development and Validation Study](https://www.jmir.org/2026/1/e86536)"
+![main figure](./assets/fig2_main.png)
