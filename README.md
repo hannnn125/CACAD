@@ -25,7 +25,7 @@ This repository includes:
 
 ---
 ## Project Structure 
-'''plaintext
+```plaintext
 ├── app/                         
 │   ├── CACAD_32B.py
 │   ├── CACAD_Gradio.py
@@ -60,7 +60,8 @@ This repository includes:
 │       └── preprocess_raw.py
 ├── .gitignore
 └── README.md
-'''
+```
+
 ---
 
 ### Installation
@@ -70,7 +71,7 @@ This repository includes:
 
 ## Citation
 ---
-\```bibtex
+```bibtex
 @article{moon-etal-2026-cacad,
     title = "Conversational AI for Child Abuse Detection Through Multistage Counseling: Model Development and Validation Study",
     author = "Moon, Hyun-Young and
@@ -89,4 +90,4 @@ This repository includes:
     doi = "10.2196/86536",
     url = "https://doi.org/10.2196/86536",
 }
-\```
+```
