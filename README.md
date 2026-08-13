@@ -17,25 +17,26 @@ This repository contains the official implement of "[Conversational AI for Child
 ## This repository includes:
 - CACAD Setup
 - Model Training
-- Chatbot
+- Counseling Chatbot (Gradio)
 
 ---
 ## Table of Contents
----
+
 1. [Project Structure](#project-structure)
 2. [CACAD Setup](#cacad-setup)
-  i.    [Installation](#installation)
-  ii.   [Dataset](#dataset)
-  iii.  [Preprocessing](#preprocessing)
-3. [Counseling]
-  i.    [NQCP](#)
-  ii.   [Offensive Question Detection] 
-  iii.  [Abuse Detection]
-4. [Citation](#citation)
+    i.    [Installation](#installation)
+    ii.   [Dataset](#dataset)
+    iii.  [Preprocessing](#preprocessing)
+3. [Model Training](#model-training)
+    i.    [NQCP](#nqcp)
+    ii.   [Offensive Question Detection](#offensive-question-detection) 
+    iii.  [Abuse Detection](#abuse-detection)
+4.  [Counseling Chatbot](#counseling-chatbot-gradio) 
+5.  [Citation](#citation)
 ---
 
 ## Project Structure
----
+
 ```plaintext
 ├── app/                         
 │   ├── CACAD_32B.py
@@ -75,7 +76,7 @@ This repository contains the official implement of "[Conversational AI for Child
 
 ---
 ## CACAD Setup
----
+
 ### Installation
 
 ```bash
@@ -110,11 +111,11 @@ You can also use your own dataset, as long as it follows the same data structure
 <details>
 <summary>Data structure details</summary>
 
-```bash
+```json
 {
     "list": [
         {
-            "항목" : "category1",
+            "항목" : "방임",
             "label" : 0 ,
             "audio": [
                 {
@@ -128,7 +129,7 @@ You can also use your own dataset, as long as it follows the same data structure
             ]
         },...
         {
-            "항목" : "category4",
+            "항목" : "성학대",
             "label" : 1 ,
             "audio": [
                 {
@@ -148,26 +149,46 @@ You can also use your own dataset, as long as it follows the same data structure
 </details>
 
 ### Preprocessing
-##### Step 1:
-
+##### **Step 1. Binarize labels and create a stratified dataset**
+Convert raw clinician scores to binary lables per abuse type and split into train/val/test dataset
 ```bash
 sh shells/preprocess/preprocess_raw.sh
 ```
+Outputs are saved under `data/processed/labeled_dataset` 
 
-##### Step 2:
-
+##### **Step 2. Build the instruction-tuning dataset**
+Format each labeled dialogue as an instruction (task description + few-shot examples) with a ground_truth label
 ```bash
 sh shells/preprocess/gen_ft_dataset.sh
 ```
+Outputs are saved under `data/processed/finetuning_dataset` (train.json, val.json, test.json)
 
-
-##### Step 3:
-
+##### **Step 3. Cluster counselor questions and assign cluster IDs**
+Embed counselor questions per abuse type, cluster them with HDBSCAN, and attach a cluster ID to each question in the labeled dialogues. Similar clusters are then merged, and the same IDs are assigned to val/test by nearest-centroid similarity.
 ```bash
 sh shells/preprocess/add_clustering_result.sh
 ```
+> You can adjust the thresholds in `configs/base_config.yaml` to get better cluster results.
+Results overwrite the `data/processed/labeled_dataset`
 
+## Model Training 
+### NQCP
+```bash 
+sh shell/training/train_NQCP.sh
+```
+### Offensive Question Detection
+```bash 
+sh shell/training/train_offensive.sh
+```
+### Abuse Detection
+```bash 
+sh shell/training/train_MLC_LLM.sh
+```
+```bash 
+sh shell/training/train_MLC_PLM.sh
+```
 
+## Counseling Chatbot (Gradio)
 
 ## Citation
 
