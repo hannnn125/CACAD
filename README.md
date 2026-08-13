@@ -3,7 +3,7 @@
 ---
 
 This repository contains the official implement of "[Conversational AI for Child Abuse Detection Through Multistage Counseling: Model Development and Validation Study](https://www.jmir.org/2026/1/e86536)"
-overview
+![overview](./assets/main.png)
 
 > Hyun-Young Moon1*, Youn-Gyu Jin1*, Yoon-Ju Kim1, Gwang-Cheol Lee1, Hyeon-Taek Oh2, Hyun A Kim2, Dinara Aliyeva3, Hyunjoo Na4, Kang-Min Kim5†
 > 1Department of Artificial Intelligence, The Catholic University of Korea, Bucheon, Republic of South Korea
