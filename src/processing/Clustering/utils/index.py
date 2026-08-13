@@ -82,7 +82,7 @@ def embed_and_assign_to_clusters(
     if all_max_similarities:
         all_max_similarities = np.array(all_max_similarities)
         print("\n" + "=" * 50)
-        print("📊 FINAL SIMILARITY ANALYSIS REPORT")
+        print("FINAL SIMILARITY ANALYSIS REPORT")
         print("=" * 50)
         print(f"Total Questions Processed : {len(all_max_similarities)}")
         print(f"Mean Similarity           : {np.mean(all_max_similarities):.4f}")

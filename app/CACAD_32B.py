@@ -294,7 +294,7 @@ class CACAD_32B:
                 for item in items:
                     cluster = item.get('cluster')
                     text = item.get('text')
-                    if cluster is not None or not text:
+                    if cluster is None or not text:
                         continue
                     self.cluster_index[abuse_type].setdefault(cluster, []).append(text)
         
@@ -304,10 +304,10 @@ class CACAD_32B:
             self.cluster_index = {}
     def _load_category_definition(self, abuse_type, pred_cluster):
         """카테고리 정의 로드"""
-        category_definition_file  = os.path.join(self.config['paths']['prompt_dir'],"counseling","cluster_details","category_definition.json")
+        category_definition_file  = os.path.join(self.config['paths']['prompt_dir'],"cluster_details","cluster_definitions.json")
         with open(category_definition_file, "r", encoding="utf-8") as f:
             category_definition = json.load(f)
-        return category_definition[abuse_type][pred_cluster]
+        return category_definition[abuse_type][str(pred_cluster)]
     
     def _get_category_information(self, abuse_type, pred_cluster, num_examples=None):
         """카테고리 정의 & 예시 질문 n 개 반환"""
@@ -327,24 +327,30 @@ class CACAD_32B:
         with open(prompt_file, "r", encoding="utf-8") as f:
             return f.read().strip()
 
-    def _load_prompt(self, abuse_type, prompt_type, pred_cluster=None):
+    def _load_prompt(self, abuse_type, prompt_type, pred_cluster=None, num_examples=None):
         """프롬프트 유형에 따라 시스템/예시 프롬프트를 조합해 반환."""
         base_prompt = self.prompts['base']
 
         match prompt_type:
             case "token_prediction":
-                prompt = base_prompt + self.prompts['token_prediction']
+                prompt = self.prompts['token_prediction'].format(abuse_type=abuse_type)
             case "baseline":
-                prompt = base_prompt + self.prompts['baseline']
+                example_conversations = self._get_conversation_examples(abuse_type)
+                prompt = base_prompt +"\n" + self.prompts['baseline'].format(abuse_type=abuse_type, example_conversations=example_conversations)
             case "category":
                 category_definition, category_Q_example = self._get_category_information(
-                    abuse_type, pred_cluster, num_examples=1
+                    abuse_type, pred_cluster, num_examples=2
                 )
                 example_conversations = self._get_conversation_examples(abuse_type)
-                prompt = base_prompt + self.prompts['category'].format(category_definition, category_Q_example, example_conversations)
+                prompt = base_prompt + "\n\n" + self.prompts['category'].format(
+                    abuse_type= abuse_type, 
+                    category_definition=category_definition, 
+                    category_example_questions=category_Q_example, 
+                    example_conversations=example_conversations
+                    )
             case "follow":
                 example_conversations = self._get_conversation_examples(abuse_type)
-                prompt = base_prompt + self.prompts['follow'].format(example_conversations)
+                prompt = base_prompt +"\n" + self.prompts['follow'].format(abuse_type=abuse_type, example_conversations=example_conversations)
         return prompt
     
     def get_next_question(self, session_id):
@@ -504,9 +510,9 @@ class CACAD_32B:
         """클러스터 정보를 내부적으로 활용하여 질문 생성"""
         session = self.sessions[session_id]
         abuse_type = session['current_abuse_type']
-        prompt = self._load_prompt(abuse_type, "category", pred_cluster)
+        category_prompt = self._load_prompt(abuse_type, "category", pred_cluster)
         # 질문 생성 컨텍스트 구성 (system + 전체 대화 히스토리)
-        context = [{"role": "system", "content": prompt}] + session['current_abuse_type_history']
+        context = [{"role": "system", "content": category_prompt}] + session['current_abuse_type_history']
         try:
             response = self._call_vllm_api(context)
             

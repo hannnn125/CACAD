@@ -3,10 +3,12 @@
 data/raw/*
 !data/raw/.gitkeep
 data/processed/
-
-outputs/
+!data/processed/offensive_dataset/*
+outputs/*
 
 counsell_github/prompt/counseling/cluster_details/*
+!counsell_github/prompt/counseling/cluster_details/.gitkeep
+counsell_github/app/test.py
 
 # macOS
 .DS_Store

@@ -10,7 +10,7 @@ def merge_centroid(
 ):
     centroid_dir = os.path.join(data_dir, "embeddings", "centroids")
     labeled_dir = str(data_dir)
-    details_dir = os.path.join(data_dir, "cluster_details")
+    details_dir = os.path.join("prompts", "cluster_details")
 
     if not os.path.exists(centroid_dir):
         raise FileNotFoundError(f"Centroid directory not found: {centroid_dir}")

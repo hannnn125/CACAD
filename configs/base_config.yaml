@@ -3,8 +3,8 @@ paths:
   labeled_data: data/processed/labeled_dataset
   offensive_data: data/processed/offensive_dataset
   finetuning_data: data/processed/finetuning_dataset
-  prompt_dir: prompt
-  cache_dir: /nas/user10/.cache/yg/
+  prompt_dir: prompts
+  cache_dir: ./.cache/huggingface
   output_dir: outputs/
 
 abuse_types:
@@ -13,8 +13,8 @@ abuse_types:
   - 신체학대
   - 성학대
 
-exclude_files : {"0013.json", "0004.json", "0005.json", "0122.json"}
-
+exclude_files : {'3601.json', '1160.json'}
+# {"0013.json", "0004.json", "0005.json", "0122.json"}
 clustering:
   model_name: jhgan/ko-sroberta-multitask
   similarity_threshold: 0.55
@@ -38,6 +38,6 @@ counseling:
   api_key: "EMPTY"
   model_name: "LGAI-EXAONE/EXAONE-4.0-32B-AWQ"
   nqcp_url: "http://localhost:8001"
-  cluster_unique_question_path: "data/processed/labeled_dataset/TopQ_by_type.json"
+  cluster_unique_question_path: "prompts/cluster_details/TopQ_by_type.json"
   max_turns: 30
   conversation_save_dir: "./conversations"

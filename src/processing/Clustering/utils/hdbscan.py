@@ -45,7 +45,7 @@ class HDBSCANClustering:
             self.inject_clusters_to_json(abuse_type, mapping, full_cluster_ID) #json 파일에 클러스터 정보 주입
         
         self.save_modified_json()
-        # self.save_cluster_details_csv()
+        self.save_cluster_details_csv()
 
         print ("noise reassign stats--------------------------------")
         for abuse_type, stats in self.noise_reassign_stats.items():
@@ -162,7 +162,7 @@ class HDBSCANClustering:
         )
 
         out_dir = os.path.join(
-            self.data_dir,
+            "prompts",
             "cluster_details"
         )
         os.makedirs(out_dir, exist_ok=True)

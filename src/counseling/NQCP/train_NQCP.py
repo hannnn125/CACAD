@@ -59,13 +59,15 @@ def main():
     val_ds = MultiTurnNQCPDataset(
         folder_path=val_folder,
         tokenizer_name=model_name,
-        target_abuse_type=abuse_type
+        target_abuse_type=abuse_type,
+        label2id=train_ds.label2id
     )
 
     test_ds = MultiTurnNQCPDataset(
         folder_path=test_folder,
         tokenizer_name=model_name,
-        target_abuse_type=abuse_type
+        target_abuse_type=abuse_type,
+        label2id=train_ds.label2id
     )
 
     # train_ds = NQCPDataset(

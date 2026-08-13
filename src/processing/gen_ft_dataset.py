@@ -88,6 +88,7 @@ def main():
     args = parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
     exclude_files, instruction_prompt = gen_instruction_prompt(args, example_num = args.example_num)
+    print(exclude_files)
     config = yaml.load(open(args.config_path, "r", encoding="utf-8"), Loader=yaml.FullLoader)
     config["exclude_files"] = exclude_files
     with open(args.config_path, "w", encoding="utf-8") as f:
