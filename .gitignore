@@ -2,8 +2,9 @@
 #데이터
 data/raw/*
 !data/raw/.gitkeep
-data/processed/
-!data/processed/offensive_dataset/*
+data/processed/*
+!data/processed/offensive_dataset/
+!data/processed/offensive_dataset/**
 outputs/*
 
 prompts/cluster_details/*
