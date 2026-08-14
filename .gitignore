@@ -8,7 +8,6 @@ outputs/*
 
 prompts/cluster_details/*
 !prompts/cluster_details/.gitkeep
-app/test.py
 
 # macOS
 .DS_Store

@@ -135,7 +135,7 @@ def run_val(checkpoint_path, save_dir, val_data, max_new_tokens=7):
     accuracy = correct / total if total > 0 else 0.0
     macro_f1 = f1_score(np.array(all_labels), np.array(all_preds), average='macro')
 
-    print(f"✅ Checkpoint {checkpoint_path} 평가 완료")
+    print(f"Checkpoint {checkpoint_path} 평가 완료")
     print(f"  정확도: {accuracy:.4f} | Macro F1: {macro_f1:.4f}")
     print(f"  예측: {log_file}")
 

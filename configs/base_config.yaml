@@ -13,8 +13,10 @@ abuse_types:
   - 신체학대
   - 성학대
 
-exclude_files : {'3601.json', '1160.json'}
-# {"0013.json", "0004.json", "0005.json", "0122.json"}
+api_keys: "WRITE_YOUR_API_KEY_HERE"
+
+exclude_files : {"0013.json", "0004.json", "0005.json", "0122.json"}
+
 clustering:
   model_name: jhgan/ko-sroberta-multitask
   similarity_threshold: 0.55
@@ -38,6 +40,11 @@ counseling:
   api_key: "EMPTY"
   model_name: "LGAI-EXAONE/EXAONE-4.0-32B-AWQ"
   nqcp_url: "http://localhost:8001"
+  nqcp_model_paths:
+    방임: "outputs/NQCP/klue_roberta-large/ep10_lr1e-05_bs8/방임"
+    정서학대: "outputs/NQCP/klue_bert-base/ep10_lr1e-05_bs8/정서학대"
+    신체학대: "outputs/NQCP/klue_roberta-large/ep10_lr5e-06_bs8/신체학대"
+    성학대: "outputs/NQCP/klue_roberta-large/ep20_lr1e-05_bs16/성학대"
   cluster_unique_question_path: "prompts/cluster_details/TopQ_by_type.json"
   max_turns: 30
   conversation_save_dir: "./conversations"

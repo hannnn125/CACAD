@@ -98,8 +98,10 @@ class MultiTurnNQCPDataset(Dataset):
         target_abuse_type=None,
         max_length=512,
         label2id=None,
-        max_turns=None  # None이면 토큰 기준 truncation만 사용
+        max_turns=None,  # None이면 토큰 기준 truncation만 사용
+        exclude_files=None
     ):
+        self.exclude_files = set(exclude_files or []) # set of file names to exclude
         # tokenizer
         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
         self.tokenizer.truncation_side = "left"  
@@ -135,6 +137,7 @@ class MultiTurnNQCPDataset(Dataset):
         samples = []
         for fname in os.listdir(folder_path):
             if not fname.endswith(".json"): continue
+            if fname in self.exclude_files: continue
             with open(os.path.join(folder_path, fname), encoding="utf-8") as f:
                 data = json.load(f)
 

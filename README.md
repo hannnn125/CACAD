@@ -28,7 +28,7 @@ This repository contains the official implement of "[Conversational AI for Child
     ii.   [Dataset](#dataset)
     iii.  [Preprocessing](#preprocessing)
 3. [Model Training](#model-training)
-    i.    [NQCP](#nqcp)
+    i.    [Next Question Category Prediction](#nqcp)
     ii.   [Offensive Question Detection](#offensive-question-detection) 
     iii.  [Abuse Detection](#abuse-detection)
 4.  [Counseling Chatbot](#counseling-chatbot-gradio) 
@@ -92,11 +92,11 @@ Set up your output directory and cache directory in `config/base_config.yaml`
 
 ### Dataset
 
-We conducted CACAD using the following datsets:
+We conducted CACAD using the following datsets: <br>
 [Child and adolecent counseling data](https://aihub.or.kr/aihubdata/data/view.do?dataSetSn=71680)
 
-> Once downloaded, unzip both the TL_out and VL_out zip files into the same `data/raw` folder.
-> The resulting structure should look like this:
+Once downloaded, unzip both TL_out and VL_out zip files into the same `data/raw` folder.<br>
+The resulting structure should look like this:
 
 ```plaintext
 ├── data/
@@ -106,8 +106,7 @@ We conducted CACAD using the following datsets:
 │   │   └── …         
 ```
 
-You can also use your own dataset, as long as it follows the same data structure below:
-
+>You can also use your own dataset, as long as it follows the same data structure below:
 <details>
 <summary>Data structure details</summary>
 
@@ -149,45 +148,57 @@ You can also use your own dataset, as long as it follows the same data structure
 </details>
 
 ### Preprocessing
-##### **Step 1. Binarize labels and create a stratified dataset**
-Convert raw clinician scores to binary lables per abuse type and split into train/val/test dataset
+#### **Step 1. Binarize labels and create a stratified dataset**
+Convert raw clinician scores to binary lables per abuse type and split into train/val/test dataset:
 ```bash
 sh shells/preprocess/preprocess_raw.sh
 ```
-Outputs are saved under `data/processed/labeled_dataset` 
+> *Outputs are saved under `data/processed/labeled_dataset`*
 
-##### **Step 2. Build the instruction-tuning dataset**
-Format each labeled dialogue as an instruction (task description + few-shot examples) with a ground_truth label
+#### **Step 2. Build the instruction-tuning dataset**
+Format each labeled dialogue as an instruction (task description + few-shot examples) with a ground_truth label:
 ```bash
 sh shells/preprocess/gen_ft_dataset.sh
 ```
-Outputs are saved under `data/processed/finetuning_dataset` (train.json, val.json, test.json)
+> *Outputs are saved under `data/processed/finetuning_dataset` (train.json, val.json, test.json)*
+You can adjust `--example_num` to control the number of few-shot examples. 
 
-##### **Step 3. Cluster counselor questions and assign cluster IDs**
-Embed counselor questions per abuse type, cluster them with HDBSCAN, and attach a cluster ID to each question in the labeled dialogues. Similar clusters are then merged, and the same IDs are assigned to val/test by nearest-centroid similarity.
+#### **Step 3. Cluster counselor questions and assign cluster IDs**
+Embed counselor questions per abuse type, cluster them with HDBSCAN, and attach a cluster ID to each question in the labeled dialogues. Similar clusters are then merged, and the same IDs are assigned to val/test by nearest-centroid similarity: 
 ```bash
 sh shells/preprocess/add_clustering_result.sh
 ```
-> You can adjust the thresholds in `configs/base_config.yaml` to get better cluster results.
-Results overwrite the `data/processed/labeled_dataset`
+> *Results overwrite the `data/processed/labeled_dataset`*
+You can adjust the thresholds in `configs/base_config.yaml` to get better cluster results.
 
 ## Model Training 
-### NQCP
+### Next Question Category Prediction (NQCP)
+Train a model to predict the category of the counselor's next question:
 ```bash 
 sh shell/training/train_NQCP.sh
 ```
+> *Test results are saved under `outputs/NQCP/NQCP_results.csv`*
 ### Offensive Question Detection
+Train a model to detect offensive or inappropriate questions:
 ```bash 
 sh shell/training/train_offensive.sh
 ```
+> *Test results are saved under `outputs/offensive/offensive_results.csv`*
 ### Abuse Detection
+Train a model to predict four abuse types (neglect, emotional, physical, and sexual) from counseling dialogue:
+##### **LLM - fine-tune a casual LM, select a checkpoint on the valid set**
 ```bash 
 sh shell/training/train_MLC_LLM.sh
+sh shell/training/val_MLC_LLM.sh
 ```
+##### **PLM - train an encoder-based multi-label classifier**
 ```bash 
 sh shell/training/train_MLC_PLM.sh
 ```
-
+#### Uncertainty
+```bash
+sh shell/training/test_MLC_uncertainty.sh
+```
 ## Counseling Chatbot (Gradio)
 
 ## Citation

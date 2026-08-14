@@ -4,6 +4,7 @@ PLM 모델을 사용하여 다음 질문 클러스터를 예측하는 서비스
 """
 import os
 import json
+import yaml
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 from fastapi import FastAPI, HTTPException
@@ -36,17 +37,14 @@ class NQCPModel:
     """클러스터 예측 모델 관리 클래스"""
     
     def __init__(self):
+        with open("configs/base_config.yaml", "r") as f:
+            config = yaml.load(f, Loader=yaml.FullLoader)
         self.device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
         self.cluster_models = {}
-        self.cache_dir = "/nas/user04/.cache/yg/"
+        self.cache_dir = config['paths']["cache_dir"]
         
         # 클러스터 모델 경로 설정
-        self.cls_model_paths = {
-            "방임": "/nas/counsell/log/NQCP_Multi_PLM/klue/roberta-large_ep10_lr1e-05_bs8/방임/",
-            "정서학대": "/nas/counsell/log/NQCP_Multi_PLM/klue/bert-base_ep10_lr1e-05_bs8/정서학대/",
-            "신체학대": "/nas/counsell/log/NQCP_Multi_PLM/klue/roberta-large_ep10_lr5e-06_bs8/신체학대/",
-            "성학대": "/nas/counsell/log/NQCP_Multi_PLM/klue/roberta-large_ep20_lr1e-05_bs16/성학대/"
-        }
+        self.cls_model_paths = config['counseling']["nqcp_model_paths"]
     
     def _load_cluster_model(self, abuse_type: str):
         """클러스터 예측 모델 로드 (캐시 지원)"""

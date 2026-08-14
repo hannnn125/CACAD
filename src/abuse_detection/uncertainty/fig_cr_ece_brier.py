@@ -59,7 +59,6 @@ def get_bin_statistics(df, bins):
     
     for i in range(len(bins) - 1):
         lower, upper = bins[i], bins[i+1]
-        # 마지막 bin은 양끝 포함, 나머지는 [lower, upper)
         if i == len(bins) - 2:
             mask = (confidences >= lower) & (confidences <= upper)
         else:
@@ -70,7 +69,6 @@ def get_bin_statistics(df, bins):
             bin_confs.append(confidences[mask].mean())
             bin_counts.append(mask.sum())
         else:
-            # 데이터가 없는 빈은 0으로 채우되 계산 시 가중치로 인해 무시됨
             bin_accs.append(0.0)
             bin_confs.append(0.0)
             bin_counts.append(0)
@@ -78,10 +76,9 @@ def get_bin_statistics(df, bins):
     return np.array(bin_accs), np.array(bin_confs), np.array(bin_counts)
 
 def plot_calibration_curve_style_custom(df, save_dir, bins):
-    # 1. 시각화 데이터 준비
+    # 시각화 데이터 준비
     bin_accs, bin_confs, bin_counts = get_bin_statistics(df, bins)
     
-    # 데이터가 존재하는 빈만 선택
     valid_indices = bin_counts > 0
     plot_confs = bin_confs[valid_indices]
     plot_accs = bin_accs[valid_indices]

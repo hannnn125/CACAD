@@ -5,6 +5,7 @@ from pathlib import Path
 import json
 import pandas as pd
 import torch
+from datetime import datetime
 from dataloader.dataset import NQCPDataset, MultiTurnNQCPDataset
 from transformers import DataCollatorWithPadding
 from utils.metric import compute_metrics
@@ -49,11 +50,13 @@ def main():
     test_folder = os.path.join(base_dir, "test")
     val_folder = os.path.join(base_dir, "val")    
 
+    exclude_files = config['exclude_files']
 
     train_ds = MultiTurnNQCPDataset(
         folder_path=train_folder,
         tokenizer_name=model_name,
-        target_abuse_type=abuse_type
+        target_abuse_type=abuse_type,
+        exclude_files=exclude_files
     )
 
     val_ds = MultiTurnNQCPDataset(
@@ -152,12 +155,16 @@ def main():
         "Epochs": args.epochs,
         "Batch_Size": args.batch_size,
         "LR": args.lr,
+        "Weight_Decay": args.weight_decay,
+        "Seed": args.seed,
         "Accuracy": round(test_results["eval_accuracy"], 4),
-        "Macro_F1": round(test_results["eval_macro_f1"], 4)
+        "Macro_F1": round(test_results["eval_macro_f1"], 4),
+        "model_save_dir": run_dir,
+        "timestamp": datetime.now().strftime("%Y%m%d_%H%M%S")
     }
 
     csv_file_path = os.path.join(
-        config['paths']["output_dir"], "NQCP", model_name, f"{run_name}.csv"
+        config['paths']["output_dir"], "NQCP", "NQCP_results.csv"
     )
     if os.path.exists(csv_file_path):
         df = pd.read_csv(csv_file_path)

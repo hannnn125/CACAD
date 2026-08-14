@@ -1,4 +1,4 @@
-CUDA_VISIBLE_DEVICES=1 python ./src/detection/MLC/LLM/train.py \
+CUDA_VISIBLE_DEVICES=1 python ./src/abuse_detection/MLC/LLM/train.py \
 --cache_dir='/nas/user10/.cache/yg/' \
 --config_name="Qwen/Qwen2.5-3B-Instruct" \
 --tokenizer_name="Qwen/Qwen2.5-3B-Instruct" \
@@ -31,7 +31,7 @@ CUDA_VISIBLE_DEVICES=1 python ./src/detection/MLC/LLM/train.py \
 --remove_unused_columns false \
 --seed=42
 
-# CUDA_VISIBLE_DEVICES=1 python ./src/detection/MLC/LLM/train.py \
+# CUDA_VISIBLE_DEVICES=1 python ./src/abuse_detection/MLC/LLM/train.py \
 # --cache_dir='/nas/user10/.cache/yg/' \
 # --config_name="polyglot/Polyglot-3.5-3B-Instruct" \
 # --tokenizer_name="polyglot/Polyglot-3.5-3B-Instruct" \

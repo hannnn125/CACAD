@@ -1,4 +1,4 @@
-python ./src/abuseDetection/MLC/PLM/train.py \
+python ./src/abuse_detection/MLC/PLM/train.py \
 --model_name="monologg/kobert" \
 --learning_rate=2e-5 \
 --epochs=3 \
