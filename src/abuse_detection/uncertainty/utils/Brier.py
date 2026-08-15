@@ -1,6 +1,7 @@
 from sklearn.metrics import brier_score_loss
 import numpy as np
 import torch
+from typing import Tuple, Dict
 
 def compute_brier_scores(
     all_logits: torch.Tensor,    # [N, num_labels, vocab_size]

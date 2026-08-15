@@ -24,15 +24,13 @@ This repository contains the official implement of "[Conversational AI for Child
 
 1. [Project Structure](#project-structure)
 2. [CACAD Setup](#cacad-setup)
-<ol type="i">
-    <li>i.    [Installation](#installation) <li>
-    <li>ii.   [Dataset](#dataset)<li>
-    <li>iii.  [Preprocessing](#preprocessing)<li>
-</ol>
+    1.[Installation](#installation) 
+    2.[Dataset](#dataset)
+    3.[Preprocessing](#preprocessing)
 3. [Model Training](#model-training)
-    i.    [Next Question Category Prediction](#nqcp)
-    ii.   [Offensive Question Detection](#offensive-question-detection) 
-    iii.  [Abuse Detection](#abuse-detection)
+    1.[Next Question Category Prediction](#nqcp)
+    2.[Offensive Question Detection](#offensive-question-detection) 
+    3.[Abuse Detection](#abuse-detection)
 4.  [Counseling Chatbot](#counseling-chatbot-gradio) 
 5.  [Citation](#citation)
 ---
@@ -217,7 +215,7 @@ Set model paths and urls in `configs/base_config.yaml` before launching:
 | `counseling.offensive_model_path` | Best offensive-detection checkpoint |
 | `counseling.nqcp_url` / `offensive_url` | Local API URLs |
 
- ```bash
+```bash
 python app/NQCP.py
 python app/Offensive.py 
 python app/CACAD_Gradio.py

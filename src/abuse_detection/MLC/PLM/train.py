@@ -11,7 +11,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
 
 from dataloader.dataset import AbuseMultilabelDataset
-from PLM.metric import compute_MultiBERT_metrics
+from PLM.utils.metric import compute_MultiBERT_metrics
 
 import torch.nn as nn
 from transformers import AutoModel
