@@ -35,7 +35,7 @@ clustering:
       min_samples: 10
 
 counseling:
-  server_url: "http://203.229.207.38:8010/v1"
+  server_url: "YOUR_VLLM_HOST"
   api_key: "EMPTY"
   model_name: "LGAI-EXAONE/EXAONE-4.0-32B-AWQ"
   nqcp_url: "http://localhost:8001"
@@ -46,6 +46,6 @@ counseling:
     성학대: "outputs/NQCP/klue_roberta-large/ep20_lr1e-05_bs16/성학대"
   cluster_unique_question_path: "prompts/cluster_details/TopQ_by_type.json"
   offensive_url: "http://localhost:8002"
-  offensive_model_path: "best_offensive_model_path_here"
+  offensive_model_path: "outputs/offensive/best_model"
   max_turns: 30
   conversation_save_dir: "./conversations"

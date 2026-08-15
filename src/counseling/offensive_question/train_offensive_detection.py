@@ -323,7 +323,7 @@ def main():
     summary_df = pd.DataFrame(summary_data)
     print(summary_df.to_string(index=False))
     
-    summary_path = os.path.join(args.output_dir, f"summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv")
+    summary_path = os.path.join(args.output_dir, "offensive", f"summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv")
     summary_df.to_csv(summary_path, index=False)
     print(f"\nSummary saved: {summary_path}")
     print("Completed\n")

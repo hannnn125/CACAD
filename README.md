@@ -24,13 +24,13 @@ This repository contains the official implement of "[Conversational AI for Child
 
 1. [Project Structure](#project-structure)
 2. [CACAD Setup](#cacad-setup)
-    1.[Installation](#installation) 
-    2.[Dataset](#dataset)
-    3.[Preprocessing](#preprocessing)
+    1. [Installation](#installation) 
+    2. [Dataset](#dataset)
+    3. [Preprocessing](#preprocessing)
 3. [Model Training](#model-training)
-    1.[Next Question Category Prediction](#nqcp)
-    2.[Offensive Question Detection](#offensive-question-detection) 
-    3.[Abuse Detection](#abuse-detection)
+    1. [Next Question Category Prediction](#nqcp)
+    2. [Offensive Question Detection](#offensive-question-detection) 
+    3. [Abuse Detection](#abuse-detection)
 4.  [Counseling Chatbot](#counseling-chatbot-gradio) 
 5.  [Citation](#citation)
 ---
@@ -38,11 +38,11 @@ This repository contains the official implement of "[Conversational AI for Child
 ## Project Structure
 
 ```plaintext
-├── app/                         
+├── app/    # Gradio UI and FastAPI servers for counseling                     
 │   ├── CACAD_32B.py
 │   ├── CACAD_Gradio.py
 │   └── NQCP.py
-├── configs/
+├── configs/  # Experiment and serving configuration
 │   └── base_config.yaml             
 ├── data/
 │   ├── raw/ # [User-provided] Raw data provided by the user (.json format) 
@@ -51,13 +51,13 @@ This repository contains the official implement of "[Conversational AI for Child
 │       ├── labeled_dataset/     (train/*, test/*, val/*)
 │       ├── finetuning_dataset/   (train.json, test.json, val.json)
 │       └── offensive_dataset/    (train.csv, test.csv, val.csv)
-├── prompts/
+├── prompts/    # System prompts and cluster informations
 │   ├── cluster_details/ # [Will be generated]   
 │   └── counseling/     
 │       └── …            
-├── shells/  
+├── shells/  # Training and preprocessing scripts 
 │   └── …
-├── src/
+├── src/    # Preprocessing, Training, Evaluation code 
 │   ├── abuse_detection/
 │   │   ├── MLC/                  
 │   │   └── uncertainty/
@@ -70,8 +70,6 @@ This repository contains the official implement of "[Conversational AI for Child
 │       │   └── main.py
 │       ├── gen_ft_dataset.py
 │       └── preprocess_raw.py
-├── .gitignore
-└── README.md
 ```
 
 ---
@@ -221,9 +219,7 @@ python app/Offensive.py
 python app/CACAD_Gradio.py
  ```
 
-
 ## Citation
-
 ---
 
 ```bibtex

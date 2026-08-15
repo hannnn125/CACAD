@@ -17,7 +17,7 @@ class CACAD_32B:
 }   
     def __init__(self, config=None):
         self.config = config
-        self.server_url = self.config['counseling'].get("server_url", "http://203.229.207.32:8010/v1")
+        self.server_url = self.config['counseling'].get("server_url", "YOUR_VLLM_HOST")
         self.api_key = self.config['counseling'].get("api_key", "EMPTY")
         self.model_name = self.config['counseling'].get("model_name", "LGAI-EXAONE/EXAONE-4.0-32B-AWQ")
         self.abuse_types = ["방임", "정서학대", "신체학대", "성학대"]
