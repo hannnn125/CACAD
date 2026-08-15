@@ -24,9 +24,11 @@ This repository contains the official implement of "[Conversational AI for Child
 
 1. [Project Structure](#project-structure)
 2. [CACAD Setup](#cacad-setup)
-    i.    [Installation](#installation) 
-    ii.   [Dataset](#dataset)
-    iii.  [Preprocessing](#preprocessing)
+<ol type="i">
+    <li>i.    [Installation](#installation) <li>
+    <li>ii.   [Dataset](#dataset)<li>
+    <li>iii.  [Preprocessing](#preprocessing)<li>
+</ol>
 3. [Model Training](#model-training)
     i.    [Next Question Category Prediction](#nqcp)
     ii.   [Offensive Question Detection](#offensive-question-detection) 
