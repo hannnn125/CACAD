@@ -24,7 +24,7 @@ This repository contains the official implement of "[Conversational AI for Child
 
 1. [Project Structure](#project-structure)
 2. [CACAD Setup](#cacad-setup)
-    i.    [Installation](#installation)
+    i.    [Installation](#installation) 
     ii.   [Dataset](#dataset)
     iii.  [Preprocessing](#preprocessing)
 3. [Model Training](#model-training)
@@ -169,7 +169,9 @@ Embed counselor questions per abuse type, cluster them with HDBSCAN, and attach 
 sh shells/preprocess/add_clustering_result.sh
 ```
 > *Results overwrite the `data/processed/labeled_dataset`*
-You can adjust the thresholds in `configs/base_config.yaml` to get better cluster results.
+You can adjust the thresholds in `configs/base_config.yaml` to get better cluster results.<br>
+
+> **Note:** Before running the chatbot, make sure to define the cluster definition in `prompts/cluster_details/cluster_definitions.json`
 
 ## Model Training 
 ### Next Question Category Prediction (NQCP)
@@ -196,10 +198,29 @@ sh shell/training/val_MLC_LLM.sh
 sh shell/training/train_MLC_PLM.sh
 ```
 #### Uncertainty
+
 ```bash
 sh shell/training/test_MLC_uncertainty.sh
 ```
+> *Test results are saved with uncertainty(entropy, MSP) under `outputs/uncertainty/{model_name}/{checkpoint}`*
+
 ## Counseling Chatbot (Gradio)
+
+Set model paths and urls in `configs/base_config.yaml` before launching: 
+| Config key | What to set |
+|---|---|
+| `counseling.server_url` | vLLM endpoint for counselor LLM |
+| `counseling.model_name` | model_name to be used as the counselor LLM |
+| `counseling.nqcp_model_paths` | Best NQCP checkpoint per abuse type |
+| `counseling.offensive_model_path` | Best offensive-detection checkpoint |
+| `counseling.nqcp_url` / `offensive_url` | Local API URLs |
+
+ ```bash
+python app/NQCP.py
+python app/Offensive.py 
+python app/CACAD_Gradio.py
+ ```
+
 
 ## Citation
 

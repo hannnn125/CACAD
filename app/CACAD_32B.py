@@ -39,6 +39,7 @@ class CACAD_32B:
 
         # NQCP 서버 URL 설정
         self.nqcp_url = self.config['counseling'].get("nqcp_url", "http://localhost:8001")
+        self.offensive_url = self.config['counseling'].get("offensive_url", "http://localhost:8002")
         # 데이터 로드
         self._load_topQ_data()
 
@@ -353,6 +354,36 @@ class CACAD_32B:
                 prompt = base_prompt +"\n" + self.prompts['follow'].format(abuse_type=abuse_type, example_conversations=example_conversations)
         return prompt
     
+
+    def _check_offensive(self, question: str):
+        """offensive 판별"""
+        request_data = {
+            "question": question
+        }
+        response = requests.post(
+            f"{self.offensive_url}/predict_offensive",
+            json=request_data,
+            timeout=30
+        )
+        if response.status_code == 400: 
+            try: 
+                error_detail = response.json()
+                print(f"[debug] Offensive 서버 400 오류 상세: {error_detail}")
+            except: 
+                print(f"[debug] Offensive 서버 400 오류 응답: {response.text}")
+        response.raise_for_status()
+        result = response.json()
+        return result["is_offensive"]
+
+    def _generate_until_safe(self, generate_once, fallback: str, max_retries: int = 2) -> str:
+        for attempt in range(max_retries):
+            question = generate_once()
+            if not self._check_offensive(question):
+                return question
+            print(f"[debug] offensive 질문 재생성 ({attempt + 1}/{max_retries}): {question}")
+        print("[debug] 재생성 한도 초과, fallback 사용")
+        return fallback
+
     def get_next_question(self, session_id):
         """다음 질문 생성"""
         if session_id not in self.sessions:
@@ -383,20 +414,29 @@ class CACAD_32B:
             with self._measure_latency(session, 'answer_sufficiency'):
                 sufficiency_result = self._analyze_answer_sufficiency(session_id)
             print(f"[debug] 답변 충분성 분석 결과: {sufficiency_result}")
+            move_to_category=False
 
             if sufficiency_result == "|follow|" and follow_up_count < 3:
                 # 추가 질문이 필요한 경우 (최대 3회 제한)
                 print(f"추가 질문 모드: 답변이 불충분함 (횟수: {follow_up_count + 1}/3)")
                 with self._measure_latency(session, 'follow_up_question'):
                     follow_up_question = self._generate_follow_up_question(session_id)
-                
-                session['follow_up_count'] = follow_up_count + 1
-                conversation_entry = {"role": "assistant", "content": follow_up_question}
-                self._append_assistant_turn(session, conversation_entry)
-                return self._build_response(session, follow_up_question, 'follow_up', "추가 질문을 통해 더 자세한 정보를 수집합니다.",session.get('current_cluster', None))
+
+                if follow_up_question is not None:
+                    session['follow_up_count'] = follow_up_count + 1
+                    conversation_entry = {"role": "assistant", "content": follow_up_question}
+                    self._append_assistant_turn(session, conversation_entry)
+                    return self._build_response(
+                        session, 
+                        follow_up_question, 
+                        'follow_up', "추가 질문을 통해 더 자세한 정보를 수집합니다.",
+                        session.get('current_cluster', None))
+                else:
+                    print("[debug] follow 재생성 실패, 다음 클러스터로 이동")
+                    move_to_category = True
             
-            # |cluster| 또는 follow_up 3회 초과 시 다음 주제로 이동
-            elif sufficiency_result == "|cluster|" or follow_up_count >= 3:
+            # |cluster| 또는 follow_up 생성 결과 offensive 2회 초과 또는 follow_up 3회 초과 시 다음 주제로 이동
+            if sufficiency_result == "|cluster|" or follow_up_count >= 3 or move_to_category:
                 print(f"다음 클러스터로 이동")
                 current_cluster_history = session.get('current_cluster_history', [])
                 if len(current_cluster_history) >= 2:
@@ -408,7 +448,7 @@ class CACAD_32B:
                 session['current_cluster_history'] = []
                 session['follow_up_count'] = 0
 
-
+        
         if session['turn_number'] == 0:
             # 첫 턴인 경우 고정 질문 사용 (클러스터 예측 불필요)
             question=self.INITIAL_QUESTIONS[session['current_abuse_type']]
@@ -449,6 +489,7 @@ class CACAD_32B:
         conversation_entry = {"role": "assistant", "content": question}
         self._append_assistant_turn(session, conversation_entry)
         return self._build_response(session, question, 'cluster', instruction = None, next_cluster=next_cluster)
+
     def send_answer(self, session_id, answer):
         """사용자 답변 처리"""
         if session_id not in self.sessions:
@@ -513,19 +554,29 @@ class CACAD_32B:
         category_prompt = self._load_prompt(abuse_type, "category", pred_cluster)
         # 질문 생성 컨텍스트 구성 (system + 전체 대화 히스토리)
         context = [{"role": "system", "content": category_prompt}] + session['current_abuse_type_history']
-        try:
-            response = self._call_vllm_api(context)
-            
-            # 특수 토큰 제거 및 정리
-            question = response.strip()
-            question = question.replace("[|endofturn|]", "").replace("[|assistant|]", "").strip()
-            category_question = question.split("\n")[0].strip()
-            
-            return category_question if category_question else "안녕? 오늘 어떤 일이 있었어?"
-            
-        except Exception as e:
-            print(f"[debug] 질문 생성 오류: {e}")
-            return "안녕? 오늘 어떤 일이 있었어?"
+        def generate_once():
+            try:
+                response = self._call_vllm_api(context)
+                
+                # 특수 토큰 제거 및 정리
+                question = response.strip()
+                question = question.replace("[|endofturn|]", "").replace("[|assistant|]", "").strip()
+                category_question = question.split("\n")[0].strip()
+                return category_question 
+                
+            except Exception as e:
+                print(f"[debug] 질문 생성 오류: {e}")
+                return "안녕? 오늘 어떤 일이 있었어?"
+        category_question = self._generate_until_safe(generate_once, fallback=None)
+
+        if category_question is None:
+            _, category_Q_example = self._get_category_information(
+                    abuse_type, pred_cluster, num_examples=1
+                )
+            category_Q_example = category_Q_example.removeprefix("1. ").strip()
+            return category_Q_example
+        else:
+            return category_question
 
     def _generate_follow_up_question(self, session_id):
         """현재 질문에 대한 추가 질문 생성"""
@@ -534,12 +585,16 @@ class CACAD_32B:
         follow_up_prompt = self._load_prompt(abuse_type, "follow")
         follow_up_context = [{"role": "system", "content": follow_up_prompt}] + session['current_abuse_type_history']
 
-        try:
-            follow_up_question = self._call_vllm_api(follow_up_context)
-            follow_up_question = follow_up_question.split("\n")[0].strip()
-            
-            return follow_up_question if follow_up_question else "조금 더 자세히 말해줄 수 있어?"
-            
-        except Exception as e:
-            print(f"[debug] 추가 질문 생성 오류: {e}")
-            return "조금 더 자세히 말해줄 수 있어?"
+        def generate_once():
+            try: 
+                follow_up_question = self._call_vllm_api(follow_up_context)
+                follow_up_question = follow_up_question.split("\n")[0].strip()
+                return follow_up_question 
+            except Exception as e:
+                print(f"[debug] 추가 질문 생성 오류: {e}")
+                return "조금 더 자세히 말해줄 수 있어?"
+        follow_up_question =self._generate_until_safe(generate_once, fallback=None)
+        if follow_up_question is None:
+            return None
+        else:
+            return follow_up_question

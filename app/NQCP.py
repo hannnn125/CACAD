@@ -1,7 +1,8 @@
 """
 NQCP (Next Question Cluster Predictor) - FastAPI 서버
-PLM 모델을 사용하여 다음 질문 클러스터를 예측하는 서비스
+PLM 모델을 사용하여 다음 질문 클러스터를 예측
 """
+
 import os
 import json
 import yaml

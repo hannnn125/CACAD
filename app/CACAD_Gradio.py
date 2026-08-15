@@ -1,25 +1,11 @@
 import gradio as gr
+import yaml
 from CACAD_32B import CACAD_32B
 
+with open("configs/base_config.yaml", "r") as f:
+    config = yaml.load(f, Loader=yaml.FullLoader)
 # 봇 인스턴스 생성
-bot = CACAD_32B()
-
-# 현재 세션 ID를 저장할 전역 변수
-current_session_id = None
-
-
-def initialize_session():
-    """세션 초기화"""
-    global current_session_id
-    current_session_id = bot.create_session()
-    result = bot.get_next_question(current_session_id)
-    
-    if result[0] and not result[0].get('completed', False):
-        question = result[0]['question']
-        return [[question, None]]
-    else:
-        return [["상담을 시작할 수 없습니다.", None]]
-
+bot = CACAD_32B(config=config)
 
 def chat(user_message, history):
     """채팅 처리"""
