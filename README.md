@@ -90,7 +90,7 @@ Set up your output directory and cache directory in `config/base_config.yaml`
 
 ### Dataset
 
-We conducted CACAD using the following datsets: <br>
+We conducted CACAD using the following dataset: <br>
 [Child and adolecent counseling data](https://aihub.or.kr/aihubdata/data/view.do?dataSetSn=71680)
 
 Once downloaded, unzip both TL_out and VL_out zip files into the same `data/raw` folder.<br>

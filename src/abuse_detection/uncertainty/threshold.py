@@ -80,9 +80,9 @@ def run_threshold_analysis(csv_path, results_path, metric_name='entropy', thresh
 
 if __name__ == "__main__":
     # polyglot결과 경로
-    # base_dir = "/home/user10/vscode/counsell/counsell_new/MLC/uncertainty/output/polyglot-ko-5.8b/ckpt-5120"
+    # base_dir = "outputs/uncertainty/polyglot-ko-5.8b/ckpt-5120"
     # QWEN 결과 경로
-    base_dir = "./outputs/uncertainty/QWEN2.5-3B_1e-5/ckpt-1280"
+    base_dir = "outputs/uncertainty/Qwen2.5-3B-Instruct/ckpt-1280"
     csv_path = os.path.join(base_dir, "test_results_entropy.csv")
     
     run_threshold_analysis(csv_path, os.path.join(base_dir, "threshold_performance_entropy.csv"), metric_name='entropy')

@@ -146,9 +146,8 @@ def train_single_model(model_name, args, train_df, valid_df, test_df):
     
     tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=cache_dir)
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     model_folder_name = model_name.replace('/', '_')
-    run_dir = os.path.join(args.output_dir, "offensive", f'{timestamp}_{model_folder_name}')
+    run_dir = os.path.join(args.output_dir, "offensive", f'{model_folder_name}')
     os.makedirs(run_dir, exist_ok=True)
 
     train_dataset = OffensiveDataset(train_df, tokenizer, args.max_length)
@@ -234,7 +233,6 @@ def train_single_model(model_name, args, train_df, valid_df, test_df):
         "training_time_seconds": training_time,
         "inference_mean_latency_ms": inference_stats['mean_latency_ms'],
         "test_accuracy": float(test_acc),
-        "timestamp": timestamp
     }
     with open(config_path, "w", encoding="utf-8") as f:
         json.dump(config, f, ensure_ascii=False, indent=2)
