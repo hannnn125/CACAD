@@ -208,7 +208,7 @@ Set model paths and urls in `configs/base_config.yaml` before launching:
 | Config key | What to set |
 |---|---|
 | `counseling.server_url` | vLLM endpoint for counselor LLM |
-| `counseling.model_name` | model_name to be used as the counselor LLM |
+| `counseling.model_name` | model name to be used as the counselor LLM |
 | `counseling.nqcp_model_paths` | Best NQCP checkpoint per abuse type |
 | `counseling.offensive_model_path` | Best offensive-detection checkpoint |
 | `counseling.nqcp_url` / `offensive_url` | Local API URLs |
@@ -223,23 +223,11 @@ python app/CACAD_Gradio.py
 ---
 
 ```bibtex
-@article{moon-etal-2026-cacad,
-    title = "Conversational AI for Child Abuse Detection Through Multistage Counseling: Model Development and Validation Study",
-    author = "Moon, Hyun-Young and
-      Jin, Youn-Gyu and
-      Kim, Yoon-Ju and
-      Lee, Gwang-Cheol and
-      Oh, Hyeon-Taek and
-      Kim, Hyun A and
-      Aliyeva, Dinara and
-      Na, Hyunjoo and
-      Kim, Kang-Min",
-    journal = "Journal of Medical Internet Research",
-    volume = "28",
-    pages = "e86536",
-    year = "2026",
-    doi = "10.2196/86536",
-    url = "https://doi.org/10.2196/86536",
-}
+Moon HY, Jin YG, Kim Y, Lee GC, Oh H, Kim HA, Aliyeva D, Na H, Kim KM
+Conversational AI for Child Abuse Detection Through Multistage Counseling: Model Development and Validation Study
+J Med Internet Res 2026;28:e86536
+doi: 10.2196/86536
+PMID: 42430714
+PMCID: 13354129
 ```
 
